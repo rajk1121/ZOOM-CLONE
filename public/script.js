@@ -7,8 +7,8 @@ let myId
 const socket = io()
 var peer = new Peer(undefined, {
     path: '/peer',
-    host: '/',
-    port: 3000
+    host: 'myzoomclone.herokuapp.com',
+    port: 80
 });
 navigator.mediaDevices.getUserMedia({
     video: true,

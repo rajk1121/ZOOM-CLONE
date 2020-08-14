@@ -18,12 +18,15 @@ io.on('connection', socket => {
 })
 app.set("view engine", "ejs")
 app.get('/', (req, res) => {
+
+    console.log("hi")
     const uuid = uuidv4();
     res.redirect(`/${uuid}`)
 })
 app.get("/:room", (req, res) => {
+    console.log("hello")
     res.render("room", { roomId: req.params.room })
 })
-server.listen(3000, () => {
+server.listen(process.env.PORT || 3000, () => {
     console.log("Server started at 3000")
 });
