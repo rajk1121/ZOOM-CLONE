@@ -7,8 +7,9 @@ let myId
 const socket = io()
 var peer = new Peer(undefined, {
     path: '/peer',
-    host: 'myzoomclone.herokuapp.com',
-    port: 80
+    host: '/',
+    port: 3000,
+    secure: false
 });
 navigator.mediaDevices.getUserMedia({
     video: true,
@@ -18,6 +19,7 @@ navigator.mediaDevices.getUserMedia({
     addVideoStream(myVideo, stream)
 
     peer.on('call', (call) => {
+        console.log("answering")
         call.answer(stream); // Answer the call with an A/V stream.
         // console.log(otherId)
         const video = document.createElement("video")
@@ -29,6 +31,7 @@ navigator.mediaDevices.getUserMedia({
 
     socket.on("user-connected", (userId) => {
         var call = peer.call(userId, stream);
+        console.log("calling")
         const video = document.createElement("video")
         call.on('stream', function (remoteStream) {
             addVideoStream(video, remoteStream)
