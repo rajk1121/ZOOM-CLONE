@@ -40,7 +40,7 @@ navigator.mediaDevices.getUserMedia({
 })
 socket.on('createMessage', message => {
     console.log("create messagem", message)
-    $('.messages').append(`<li class="message">user ------------ ${message}</li>`)
+    $('.messages').append(`<li class="message"><span>User</span><br> ${message}</li>`)
     scrollToBottom();
 })
 peer.on('open', id => {

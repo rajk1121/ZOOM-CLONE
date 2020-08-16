@@ -84,3 +84,10 @@ video{
 .unmute,.unstop{
     color:#EB534B;
 }
+.message{
+    font-size: 20px;
+}
+.message>span{
+    color: deeppink;
+    font-size: 14px;
+}
