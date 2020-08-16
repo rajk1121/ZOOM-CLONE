@@ -17,7 +17,7 @@ navigator.mediaDevices.getUserMedia({
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
-        port: '3000'
+        port: '443'
     });
     socket.on('connect', () => {
         adddParticipants(socket.id + " (Me)")
