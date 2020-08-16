@@ -6,6 +6,7 @@ const roomId = "<%= roomId %>"
 let myVideoStream;
 var myId
 var globalSocket
+var globalPeer
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
@@ -13,12 +14,13 @@ navigator.mediaDevices.getUserMedia({
     myVideoStream = stream
     addVideoStream(myVideo, stream)
     const socket = io()
-    globalSocket = socket
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
         port: '443'
     });
+    globalSocket = socket
+    globalPeer = peer
     socket.on('connect', () => {
         adddParticipants(socket.id + " (Me)")
     });
@@ -192,4 +194,5 @@ const adddParticipants = (id) => {
 }
 const leaveMeeting = () => {
     globalSocket.disconnect();
+    globalPeer.destroy();
 }
