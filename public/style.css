@@ -71,8 +71,16 @@ video{
 }
 .main__chat_window{
     flex-grow: 1;
+    overflow-y: scroll;
 }
 .main__message_container{
     padding: 22px 12px;
     display: flex;
+}
+.messages{
+    color:white;
+    list-style:none;
+}
+.unmute,.unstop{
+    color:#EB534B;
 }

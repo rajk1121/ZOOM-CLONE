@@ -14,6 +14,11 @@ io.on('connection', socket => {
         console.log("cefe")
         socket.join(roomId)
         socket.to(roomId).broadcast.emit("user-connected", id)
+        socket.on('message', (message) => {
+            // console.log("message")
+            io.to(roomId).emit('createMessage', message)
+            // console.log("gbdege")
+        })
     })
 })
 app.set("view engine", "ejs")

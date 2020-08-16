@@ -8,8 +8,7 @@ const socket = io()
 var peer = new Peer(undefined, {
     path: '/peer',
     host: '/',
-    port: 3000,
-    secure: false
+    port: '443'
 });
 navigator.mediaDevices.getUserMedia({
     video: true,
@@ -39,6 +38,11 @@ navigator.mediaDevices.getUserMedia({
         console.log("user joined", userId)
     })
 })
+socket.on('createMessage', message => {
+    console.log("create messagem", message)
+    $('.messages').append(`<li class="message">user ------------ ${message}</li>`)
+    scrollToBottom();
+})
 peer.on('open', id => {
     console.log(id)
     myId = id
@@ -51,4 +55,68 @@ const addVideoStream = (video, stream) => {
         // console.log("vdee")
     })
     document.querySelector("#video-grid").append(video)
+}
+const text = $('input');
+$('html').keydown(e => {
+    if (e.which == 13 && text.val.length != 0) {
+        console.log(text.val())
+        socket.emit('message', text.val())
+        text.val('')
+    }
+})
+const scrollToBottom = () => {
+    let d = $('.main__chat_window')
+    d.scrollTop(d.prop('scrollHeight'))
+}
+const muteUnmute = () => {
+    const isEnabled = myVideoStream.getAudioTracks()[0].enabled;
+    if (isEnabled) {
+        myVideoStream.getAudioTracks()[0].enabled = false;
+        setUnmuteButton();
+    } else {
+        setMuteButton();
+        myVideoStream.getAudioTracks()[0].enabled = true;
+
+    }
+}
+const setMuteButton = () => {
+    let html = `
+        <i class="fas fa-microphone"></i>
+        <span>Mute</span>
+    `
+    document.querySelector('.main__mute_button').innerHTML = html
+}
+const setUnmuteButton = () => {
+    let html = `
+        <i class="unmute fas fa-microphone-slash"></i>
+        <span>Unmute</span>
+    `
+    document.querySelector('.main__mute_button').innerHTML = html
+
+}
+const stopUnstop = () => {
+    const isEnabled = myVideoStream.getVideoTracks()[0].enabled;
+    if (isEnabled) {
+        myVideoStream.getVideoTracks()[0].enabled = false;
+        setUnstopButton();
+    } else {
+        setStopButton();
+        myVideoStream.getVideoTracks()[0].enabled = true;
+
+    }
+}
+const setStopButton = () => {
+    let html = `
+        <i class="fas fa-video"></i>
+        <span>Mute</span>
+    `
+    document.querySelector('.main__stop_button').innerHTML = html
+}
+const setUnstopButton = () => {
+    let html = `
+        <i class="unstop fas fa-video-slash"></i>
+        <span>Unmute</span>
+    `
+    document.querySelector('.main__stop_button').innerHTML = html
+
 }
