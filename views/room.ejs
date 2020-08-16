@@ -48,7 +48,7 @@
                         <i class="fas fa-shield-alt"></i>
                         <span>Security</span>
                     </div>
-                    <div class="main__controls__button">
+                    <div onclick="openParticipants()" class="main__controls__button">
                         <i class="fas fa-user-friends"></i>
                         <span>Participants</span>
                     </div>
@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="main__controls__block">
-                    <div class="main__controls__button">
+                    <div onclick="leaveMeeting()" class="main__controls__button">
                         <span class='leave-meeting'>Leave Meeting</span>
                     </div>
                 </div>
@@ -77,6 +77,14 @@
             <div class="main__message_container">
                 <input type="text" placeholder="Type Message here ....." id="chat_messag">
             </div>
+        </div>
+        <div class="main__extreme_right">
+            <div class="main__part_header">
+                <h6>Participants</h6>
+            </div>
+            <ol class="participants">
+
+            </ol>
         </div>
     </div>
 

@@ -65,7 +65,7 @@ video{
     background-color: #242324;
     border-left: 1px solid #303D42
 }
-.main__header{
+.main__header, .main__part_header{
     color: #F5F5F5;
     text-align: center;
 }
@@ -90,4 +90,14 @@ video{
 .message>span{
     color: deeppink;
     font-size: 14px;
+}
+.main__extreme_right{
+    display:none;
+    flex-direction: column;
+    flex:0.2;
+    background-color: #242324;
+    border-left: 1px solid #303D42
+}
+.participants{
+    color: white;
 }

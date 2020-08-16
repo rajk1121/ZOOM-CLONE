@@ -1,9 +1,11 @@
 let isChatOpen = false;
+let isParticipantOpen = false;
 const myVideo = document.createElement("video")
 myVideo.muted = true
 const roomId = "<%= roomId %>"
 let myVideoStream;
 var myId
+var globalSocket
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
@@ -11,11 +13,23 @@ navigator.mediaDevices.getUserMedia({
     myVideoStream = stream
     addVideoStream(myVideo, stream)
     const socket = io()
+    globalSocket = socket
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
-        port: '443'
+        port: '3000'
     });
+    socket.on('connect', () => {
+        adddParticipants(socket.id + " (Me)")
+    });
+    socket.on('users-already-joined', data => {
+        if (data) {
+            console.log(data)
+            for (socketId in data) {
+                adddParticipants(socketId)
+            }
+        }
+    })
     peer.on('call', (call) => {
         console.log("answering")
         call.answer(stream); // Answer the call with an A/V stream.
@@ -26,8 +40,20 @@ navigator.mediaDevices.getUserMedia({
             addVideoStream(video, remoteStream)
         });
     })
+    socket.on('i-am-disconnecting', data => {
+        document.querySelector('.participants').innerHTML = ''
+        adddParticipants(socket.id + " (Me)")
+        if (data) {
+            // console.log(data)
 
-    socket.on("user-connected", (userId) => {
+            for (socketId in data) {
+                if (socket.id != socketId)
+                    adddParticipants(socketId)
+            }
+        }
+    })
+    socket.on("user-connected", (userId, socketId) => {
+        adddParticipants(socketId)
         var call = peer.call(userId, stream);
         console.log("calling")
         const video = document.createElement("video")
@@ -51,10 +77,13 @@ navigator.mediaDevices.getUserMedia({
         console.log(myId)
         if (e.which == 13 && text.val().length != 0) {
             console.log(text.val())
-            socket.emit('message', text.val(), myId)
+            socket.emit('message', text.val(), socket.id)
             text.val('')
         }
     })
+
+}).catch(() => {
+
 })
 const addVideoStream = (video, stream) => {
     video.srcObject = stream
@@ -127,8 +156,40 @@ const openChat = () => {
         $('.main__left').css("flex", "1.0")
         isChatOpen = !isChatOpen
     } else {
+
+        $('.main__extreme_right').css('display', "none")
         $('.main__right').css('display', "flex")
         $('.main__left').css("flex", "0.8")
         isChatOpen = !isChatOpen
+        if (isParticipantOpen) {
+
+            isParticipantOpen = !isParticipantOpen
+        }
     }
+}
+const openParticipants = () => {
+    if (isParticipantOpen) {
+
+        $('.main__right').css('display', "none")
+        $('.main__extreme_right').css('display', "none")
+        $('.main__left').css("flex", "1.0")
+        isParticipantOpen = !isParticipantOpen
+    } else {
+
+        $('.main__right').css('display', "none")
+        $('.main__extreme_right').css('display', "flex")
+        $('.main__left').css("flex", "0.8")
+        if (isChatOpen) {
+
+            isChatOpen = !isChatOpen
+        }
+        isParticipantOpen = !isParticipantOpen
+    }
+}
+const adddParticipants = (id) => {
+    let html = `<li class="real_participants">${id}</li>`
+    $('.participants').append(html)
+}
+const leaveMeeting = () => {
+    globalSocket.disconnect();
 }

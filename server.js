@@ -11,13 +11,22 @@ app.use(express.static('public'))
 app.use('/peer', peerServer)
 io.on('connection', socket => {
     socket.on('joined-room', (roomId, id) => {
-        console.log("cefe")
+        var clients_in_the_room = io.sockets.adapter.rooms[roomId];
+        if (clients_in_the_room) {
+            console.log(clients_in_the_room['sockets'])
+        }
+        console.log(socket.id)
+        socket.emit('users-already-joined', clients_in_the_room == undefined ? 0 : clients_in_the_room['sockets'])
         socket.join(roomId)
-        socket.to(roomId).broadcast.emit("user-connected", id)
+        socket.to(roomId).broadcast.emit("user-connected", id, socket.id)
         socket.on('message', (message, myId) => {
             // console.log("message")
-            io.to(roomId).emit('createMessage', message,myId)
+            io.to(roomId).emit('createMessage', message, myId)
             // console.log("gbdege")
+        })
+        socket.on('disconnect', () => {
+            var clients_in_the_room = io.sockets.adapter.rooms[roomId];
+            socket.to(roomId).broadcast.emit("i-am-disconnecting", clients_in_the_room == undefined ? 0 : clients_in_the_room['sockets'])
         })
     })
 })
