@@ -14,7 +14,7 @@ navigator.mediaDevices.getUserMedia({
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
-        port: '3000'
+        port: '443'
     });
     peer.on('call', (call) => {
         console.log("answering")
