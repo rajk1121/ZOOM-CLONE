@@ -14,9 +14,9 @@ io.on('connection', socket => {
         console.log("cefe")
         socket.join(roomId)
         socket.to(roomId).broadcast.emit("user-connected", id)
-        socket.on('message', (message) => {
+        socket.on('message', (message, myId) => {
             // console.log("message")
-            io.to(roomId).emit('createMessage', message)
+            io.to(roomId).emit('createMessage', message,myId)
             // console.log("gbdege")
         })
     })
