@@ -1,4 +1,4 @@
-console.log("geheehhe")
+let isChatOpen = false;
 const myVideo = document.createElement("video")
 myVideo.muted = true
 const roomId = "<%= roomId %>"
@@ -119,4 +119,16 @@ const setUnstopButton = () => {
     `
     document.querySelector('.main__stop_button').innerHTML = html
 
+}
+const openChat = () => {
+    if (isChatOpen) {
+
+        $('.main__right').css('display', "none")
+        $('.main__left').css("flex", "1.0")
+        isChatOpen = !isChatOpen
+    } else {
+        $('.main__right').css('display', "flex")
+        $('.main__left').css("flex", "0.8")
+        isChatOpen = !isChatOpen
+    }
 }
