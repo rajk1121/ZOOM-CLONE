@@ -142,14 +142,14 @@ const stopUnstop = () => {
 const setStopButton = () => {
     let html = `
         <i class="fas fa-video"></i>
-        <span>Mute</span>
+        <span>Stop</span>
     `
     document.querySelector('.main__stop_button').innerHTML = html
 }
 const setUnstopButton = () => {
     let html = `
         <i class="unstop fas fa-video-slash"></i>
-        <span>Unmute</span>
+        <span>Resume</span>
     `
     document.querySelector('.main__stop_button').innerHTML = html
 
