@@ -83,6 +83,9 @@ navigator.mediaDevices.getUserMedia({
             text.val('')
         }
     })
+    socket.on('reconnect', () => {
+        console.log("reconnecting")
+    })
 
 }).catch(() => {
 
