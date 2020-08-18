@@ -17,7 +17,7 @@ navigator.mediaDevices.getUserMedia({
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
-        port: '443'
+        port: '3000'
     });
     globalSocket = socket
     globalPeer = peer
@@ -36,7 +36,9 @@ navigator.mediaDevices.getUserMedia({
         console.log("answering")
         call.answer(stream); // Answer the call with an A/V stream.
         // console.log(otherId)
+        console.log(call)
         const video = document.createElement("video")
+        video.setAttribute('id', call.peer)
         call.on('stream', function (remoteStream) {
             // Show stream in some video/canvas element.
             addVideoStream(video, remoteStream)
@@ -59,6 +61,7 @@ navigator.mediaDevices.getUserMedia({
         var call = peer.call(userId, stream);
         console.log("calling")
         const video = document.createElement("video")
+        video.setAttribute('id', userId)
         call.on('stream', function (remoteStream) {
             addVideoStream(video, remoteStream)
         });
@@ -86,6 +89,15 @@ navigator.mediaDevices.getUserMedia({
     socket.on('reconnect', () => {
         console.log("reconnecting", socket.id)
 
+    })
+    socket.on('disconnect', () => {
+        leaveMeeting()
+    })
+    socket.on("remove-it", (peerId) => {
+        let obj = document.getElementById(peerId)
+        if (obj) {
+            obj.remove()
+        }
     })
 
 }).catch(() => {
@@ -197,6 +209,8 @@ const adddParticipants = (id) => {
     $('.participants').append(html)
 }
 const leaveMeeting = () => {
+    globalSocket.emit("remove", myId)
     globalSocket.disconnect();
     globalPeer.destroy();
+    window.location.assign('/leaveMeeting');
 }

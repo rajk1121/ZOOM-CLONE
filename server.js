@@ -17,6 +17,9 @@ io.on('connection', socket => {
         if (clients_in_the_room) {
             console.log(clients_in_the_room['sockets'])
         }
+        socket.on("remove", (peerId) => {
+            socket.to(roomId).broadcast.emit("remove-it", peerId)
+        })
         console.log(socket.id)
         socket.emit('users-already-joined', clients_in_the_room == undefined ? 0 : clients_in_the_room['sockets'])
         socket.join(roomId)
@@ -27,12 +30,16 @@ io.on('connection', socket => {
             // console.log("gbdege")
         })
         socket.on('disconnect', () => {
+            console.log("disconnect")
             var clients_in_the_room = io.sockets.adapter.rooms[roomId];
             socket.to(roomId).broadcast.emit("i-am-disconnecting", clients_in_the_room == undefined ? 0 : clients_in_the_room['sockets'])
         })
     })
 })
 app.set("view engine", "ejs")
+app.get("/leaveMeeting", (req, res) => {
+    res.render("leave")
+})
 app.get('/', (req, res) => {
 
     console.log("hi")

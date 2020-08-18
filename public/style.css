@@ -101,3 +101,21 @@ video{
 .participants{
     color: white;
 }
+.leave-container{
+    background-color: #34B434;
+    border-radius: 15px;
+    /* height: 5rem; */
+    color: #EB534B;
+    width: 50vw;
+/* background-color: green; */
+/* color: orange; */
+border-radius: 15px;
+/* padding: ; */
+justify-content: center;
+display: grid;
+height: 200px;
+align-items: center;
+font-size: xxx-large;
+margin: auto;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
