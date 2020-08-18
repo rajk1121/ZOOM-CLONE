@@ -10,7 +10,9 @@ const peerServer = ExpressPeerServer(server,
 app.use(express.static('public'))
 app.use('/peer', peerServer)
 io.on('connection', socket => {
+    console.log(socket.id, "************************")
     socket.on('joined-room', (roomId, id) => {
+        console.log(socket.id, "**********/////////////*")
         var clients_in_the_room = io.sockets.adapter.rooms[roomId];
         if (clients_in_the_room) {
             console.log(clients_in_the_room['sockets'])
