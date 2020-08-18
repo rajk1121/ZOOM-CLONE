@@ -37,9 +37,6 @@ io.on('connection', socket => {
     })
 })
 app.set("view engine", "ejs")
-app.get("/leaveMeeting", (req, res) => {
-    res.render("leave")
-})
 app.get('/', (req, res) => {
 
     console.log("hi")
@@ -49,6 +46,9 @@ app.get('/', (req, res) => {
 app.get("/:room", (req, res) => {
     console.log("hello")
     res.render("room", { roomId: req.params.room })
+})
+app.get("/leaveMeeting", (req, res) => {
+    res.render("leave")
 })
 server.listen(process.env.PORT || 3000, () => {
     console.log(`Server started at ${process.env.PORT || 3000}`)
