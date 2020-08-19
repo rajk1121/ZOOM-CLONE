@@ -209,7 +209,7 @@ const adddParticipants = (id) => {
 }
 const leaveMeeting = (param) => {
     // globalSocket.emit("remove", myId)
-    if (param == "leave") {
+    if (param != "networkError") {
         globalSocket.disconnect();
         globalPeer.destroy();
         window.location.assign('/leaveMeeting');
