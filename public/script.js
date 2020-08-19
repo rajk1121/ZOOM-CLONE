@@ -2,7 +2,6 @@ let isChatOpen = false;
 let isParticipantOpen = false;
 const myVideo = document.createElement("video")
 myVideo.muted = true
-const roomId = "<%= roomId %>"
 let myVideoStream;
 var myId
 var globalSocket
@@ -26,17 +25,16 @@ navigator.mediaDevices.getUserMedia({
     });
     socket.on('users-already-joined', data => {
         if (data) {
-            console.log(data)
             for (socketId in data) {
                 adddParticipants(socketId)
             }
         }
     })
     peer.on('call', (call) => {
-        console.log("answering")
+        // console.log("answering")
         call.answer(stream); // Answer the call with an A/V stream.
         // console.log(otherId)
-        console.log(call)
+        // console.log(call)
         const video = document.createElement("video")
         video.setAttribute('id', call.peer)
         call.on('stream', function (remoteStream) {
@@ -59,29 +57,29 @@ navigator.mediaDevices.getUserMedia({
     socket.on("user-connected", (userId, socketId) => {
         adddParticipants(socketId)
         var call = peer.call(userId, stream);
-        console.log("calling")
+        // console.log("calling")
         const video = document.createElement("video")
         video.setAttribute('id', userId)
         call.on('stream', function (remoteStream) {
             addVideoStream(video, remoteStream)
         });
-        console.log("user joined", userId)
+        // console.log("user joined", userId)
     })
     socket.on('createMessage', (message, myId) => {
-        console.log("create messagem", message)
+        // console.log("create messagem", message)
         $('.messages').append(`<li class="message"><span>User (${myId})</span><br> ${message}</li>`)
         scrollToBottom();
     })
     peer.on('open', id => {
-        console.log(id)
+        // console.log(id)
         myId = id
         socket.emit('joined-room', roomId, id)
     })
     const text = $('input');
     $('html').keydown(e => {
-        console.log(myId)
+        // console.log(myId)
         if (e.which == 13 && text.val().length != 0) {
-            console.log(text.val())
+            // console.log(text.val())
             socket.emit('message', text.val(), socket.id)
             text.val('')
         }
