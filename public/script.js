@@ -87,11 +87,10 @@ navigator.mediaDevices.getUserMedia({
         }
     })
     socket.on('reconnect', () => {
-        console.log("reconnecting", socket.id)
-
+        leaveMeeting("networkError")
     })
     socket.on('disconnect', () => {
-        leaveMeeting()
+        leaveMeeting("Network Error")
     })
     socket.on("remove-it", (peerId) => {
         let obj = document.getElementById(peerId)
@@ -208,9 +207,13 @@ const adddParticipants = (id) => {
     let html = `<li class="real_participants">${id}</li>`
     $('.participants').append(html)
 }
-const leaveMeeting = () => {
-    globalSocket.emit("remove", myId)
+const leaveMeeting = (param) => {
+    // globalSocket.emit("remove", myId)
     globalSocket.disconnect();
     globalPeer.destroy();
-    window.location.assign('/leaveMeeting');
+    if (param == "leave") {
+        window.location.assign('/leaveMeeting');
+    } else {
+        window.location.assign('/networkError');
+    }
 }
