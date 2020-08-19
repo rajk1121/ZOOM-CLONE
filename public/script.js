@@ -89,9 +89,9 @@ navigator.mediaDevices.getUserMedia({
     socket.on('reconnect', () => {
         leaveMeeting("networkError")
     })
-    socket.on('disconnect', () => {
-        leaveMeeting("leave")
-    })
+    // socket.on('disconnect', () => {
+    //     leaveMeeting("leave")
+    // })
     socket.on("remove-it", (peerId) => {
         let obj = document.getElementById(peerId)
         if (obj) {
