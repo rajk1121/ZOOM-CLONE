@@ -2,6 +2,12 @@ body{
     margin: 0;
     padding:0
 }
+textarea{
+    background-color: antiquewhite;
+/* border-style: none; */
+padding: 1rem;
+border-radius: 15px;
+}
  @keyframes blinking {
         0%{
           background-color: #ff3d50;

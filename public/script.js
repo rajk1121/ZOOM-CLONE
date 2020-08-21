@@ -86,7 +86,7 @@ navigator.mediaDevices.getUserMedia({
                 $('.main__chat_button').addClass('highlight')
             }
         }
-        $('.messages').append(`<li class="message"><span>User (${myId})</span><br> ${message}</li>`)
+        $('.messages').append(`<li class="message"><span>User (${myId})</span><br><textarea> ${message}</textarea></li>`)
         scrollToBottom();
     })
     peer.on('open', id => {
