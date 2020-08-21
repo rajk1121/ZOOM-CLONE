@@ -10,31 +10,60 @@ const peerServer = ExpressPeerServer(server,
 app.use(express.static('public'))
 app.use('/peer', peerServer)
 io.on('connection', socket => {
+    socket.on("set", (username) => {
+        // console.log("sset - username")
+        socket.username = username
+    })
     // console.log(socket.id, "************************")
-    socket.on('joined-room', (roomId, id) => {
+    socket.on('joined-room', async (roomId, id) => {
         socket.peerId = id
         // console.log(socket.id, "**********/////////////*")
-        var clients_in_the_room = io.sockets.adapter.rooms[roomId];
+
+        // var clients_in_the_room = io.sockets.adapter.rooms[roomId];
+        let clients_in_the_room
+        await io.of('/').in(roomId).clients(function (error, clients) {
+            clients_in_the_room = clients.map((client) => {
+                // console.log(io.sockets.connected[client].username)
+                return io.sockets.connected[client].username
+            })
+            // var numClients = io.sockets.connected[clients[0]];
+            // console.log(numClients)
+        });
+        // console.log(clients_in_the_room)
         // if (clients_in_the_room) {
-        //     console.log(clients_in_the_room['sockets'])
+        //     console.log(clients_in_the_room)
+        //     io.of('/').in(roomId).clients(function (error, clients) {
+        //         var numClients = io.sockets.connected[clients[0]];
+        //         console.log(numClients)
+        //     });
         // }
+
         socket.on("remove", (peerId) => {
             socket.to(roomId).broadcast.emit("remove-it", peerId)
         })
         // console.log(socket.id)
-        socket.emit('users-already-joined', clients_in_the_room == undefined ? 0 : clients_in_the_room['sockets'])
+        socket.emit('users-already-joined', clients_in_the_room == undefined ? 0 : clients_in_the_room)
         socket.join(roomId)
-        socket.to(roomId).broadcast.emit("user-connected", id, socket.id)
-        socket.on('message', (message, myId) => {
+        socket.to(roomId).broadcast.emit("user-connected", id, socket.username)
+        socket.on('message', (message, myId, socketId) => {
             // console.log("message")
-            io.to(roomId).emit('createMessage', message, myId)
+            io.to(roomId).emit('createMessage', message, myId, socketId)
             // console.log("gbdege")
         })
-        socket.on('disconnect', () => {
+        socket.on('disconnect', async () => {
             // console.log("disconnect")
             socket.to(roomId).broadcast.emit("remove-it", socket.peerId)
-            var clients_in_the_room = io.sockets.adapter.rooms[roomId];
-            socket.to(roomId).broadcast.emit("i-am-disconnecting", clients_in_the_room == undefined ? 0 : clients_in_the_room['sockets'])
+            let clients_in_the_room
+            await io.of('/').in(roomId).clients(function (error, clients) {
+                clients_in_the_room = clients.map((client) => {
+                    // console.log(io.sockets.connected[client].username)
+                    return io.sockets.connected[client].username
+                })
+                // var numClients = io.sockets.connected[clients[0]];
+                // console.log(numClients)
+            });
+
+            socket.to(roomId).broadcast.emit("i-am-disconnecting", clients_in_the_room == undefined ? 0 : clients_in_the_room)
         })
     })
 })

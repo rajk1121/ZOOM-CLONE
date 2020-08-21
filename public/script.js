@@ -12,22 +12,31 @@ navigator.mediaDevices.getUserMedia({
 }).then((stream) => {
     myVideoStream = stream
     addVideoStream(myVideo, stream)
+    let person = prompt("Please enter your name", "Harry Potter");
+    console.log(person)
     const socket = io()
+
+    // console.log(socket)
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
-        port: '443'
+        port: '3000'
     });
     globalSocket = socket
     globalPeer = peer
     socket.on('connect', () => {
-        adddParticipants(socket.id + " (Me)")
+
+        socket.emit("set", person)
+        console.log(socket.id)
+        adddParticipants(person + " (Me)")
     });
     socket.on('users-already-joined', data => {
+
+        console.log(data)
         if (data) {
-            for (socketId in data) {
-                adddParticipants(socketId)
-            }
+            data.forEach(element => {
+                adddParticipants(element)
+            });
         }
     })
     peer.on('call', (call) => {
@@ -44,14 +53,14 @@ navigator.mediaDevices.getUserMedia({
     })
     socket.on('i-am-disconnecting', data => {
         document.querySelector('.participants').innerHTML = ''
-        adddParticipants(socket.id + " (Me)")
+        adddParticipants(person + " (Me)")
         if (data) {
             // console.log(data)
 
-            for (socketId in data) {
-                if (socket.id != socketId)
-                    adddParticipants(socketId)
-            }
+            data.forEach(element => {
+                if (person != element)
+                    adddParticipants(element)
+            });
         }
     })
     socket.on("user-connected", (userId, socketId) => {
@@ -65,8 +74,18 @@ navigator.mediaDevices.getUserMedia({
         });
         // console.log("user joined", userId)
     })
-    socket.on('createMessage', (message, myId) => {
-        // console.log("create messagem", message)
+    socket.on('createMessage', (message, myId, senderId) => {
+        console.log("create messagem", message, senderId, socket.id)
+        if (socket.id != senderId) {
+            if (isChatOpen) {
+                $('.main__chat_button').addClass('highlight')
+                setTimeout(() => {
+                    $('.main__chat_button').removeClass('highlight')
+                }, 500)
+            } else {
+                $('.main__chat_button').addClass('highlight')
+            }
+        }
         $('.messages').append(`<li class="message"><span>User (${myId})</span><br> ${message}</li>`)
         scrollToBottom();
     })
@@ -80,7 +99,7 @@ navigator.mediaDevices.getUserMedia({
         // console.log(myId)
         if (e.which == 13 && text.val().length != 0) {
             // console.log(text.val())
-            socket.emit('message', text.val(), socket.id)
+            socket.emit('message', text.val(), person, socket.id)
             text.val('')
         }
     })
@@ -171,7 +190,7 @@ const openChat = () => {
         $('.main__left').css("flex", "1.0")
         isChatOpen = !isChatOpen
     } else {
-
+        $('.main__controls__button').removeClass('highlight')
         $('.main__extreme_right').css('display', "none")
         $('.main__right').css('display', "flex")
         $('.main__left').css("flex", "0.8")

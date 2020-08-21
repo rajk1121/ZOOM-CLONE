@@ -2,6 +2,28 @@ body{
     margin: 0;
     padding:0
 }
+ @keyframes blinking {
+        0%{
+          background-color: #ff3d50;
+          border: 5px solid #871924;
+        }
+        /* YOU CAN ADD MORE COLORS IN THE KEYFRAMES IF YOU WANT
+        50%{
+          background-color: #55d66b;
+          border: 5px solid #126620;
+        }
+        */
+        100%{
+          background-color: #222291;
+          border: 5px solid #6565f2;
+        }
+      }
+.highlight{
+/* width: 300px;
+height: 300px; */
+/* NAME | TIME | ITERATION */
+animation: blinking 1s infinite;
+}
 #video-grid{
     display: flex;
     justify-content: center;
