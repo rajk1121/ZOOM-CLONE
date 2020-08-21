@@ -75,7 +75,7 @@ navigator.mediaDevices.getUserMedia({
         // console.log("user joined", userId)
     })
     socket.on('createMessage', (message, myId, senderId) => {
-        console.log("create messagem", message, senderId, socket.id)
+        // console.log("create messagem", message, senderId, socket.id)
         if (socket.id != senderId) {
             if (isChatOpen) {
                 $('.main__chat_button').addClass('highlight')
