@@ -20,7 +20,7 @@ navigator.mediaDevices.getUserMedia({
     var peer = new Peer(undefined, {
         path: '/peer',
         host: '/',
-        port: '3000'
+        port: '443'
     });
     globalSocket = socket
     globalPeer = peer
